@@ -5,7 +5,7 @@ var config = {
 		server:{
 			baseDir:src
 		},
-		files:[app+'/*.js']
+		files:[app+'/*.js',src+'index.html']
 	},
 	watch:{
 		js:app+'/*.js'

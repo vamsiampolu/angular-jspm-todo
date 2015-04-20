@@ -14,15 +14,19 @@
   		</script>
 	</head>
 	<body ng-app="app">
-		<div ng-controller="HelloCtrl">
-			{{hello}}
-			<div class="ui inverted segment">
-				<dropdown class="inverted" title={{dropdown.title}} ng-model="dropdown_model" open="false">
-					<dropdown-group title="c" ng-repeat="c in categories">{{c}}</dropdown-group>
-				</dropdown>
-				<button class="ui inverted green button">{{hello}}</button>
+		<header>Todo App</header>
+		<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
+			<div class="column" ng-repeat="todo in todos">
+				<article class="ui horizontal inverted segment">
+					{{todo.task}}
+					<div class="ui buttons">
+						<button class="ui inverted toggle button">{{todo.done}}</button>
+						<button class="ui inverted button">Edit</button>
+						<button class="ui inverted button">Delete</button>
+					</div>
+				</article>
 			</div>
-		</div>
+		</section>	
   		<script type='text/javascript' id="__bs_script__">//<![CDATA[
     document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.2.6.4.js'><\/script>".replace("HOST", location.hostname));
 //]]></script>
