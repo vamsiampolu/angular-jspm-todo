@@ -1,0 +1,4 @@
+#Ignore all jspm modules and npm modules:
+
+jspm_packages
+node_modules
