@@ -1,5 +1,6 @@
 var angular = require("angular");
-var semanticui = require('angular-semantic-ui');
+var $ = require('semantic-ui');
+var ngsemanticui = require('angular-semantic-ui');
 console.log("Have I been doing this correctly?");
 console.log(angular!=null);
 var app = angular.module("app",['angularify.semantic']);
