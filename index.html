@@ -14,13 +14,17 @@
   		</script>
 	</head>
 	<body ng-app="app">
-		<header>Todo App</header>
+		<header class="ui large header centered">Todo App</header>
 		<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
 			<div class="column" ng-repeat="todo in todos">
 				<article class="ui horizontal inverted segment">
-					{{todo.task}}
+					<header class="ui inverted medium header">
+						<strike ng-show="{{todo.done}}">{{todo.task}}</strike>
+						<span ng-hide="{{todo.done}}">{{todo.task}}</span>
+					</header>
+					
 					<div class="ui buttons">
-						<button class="ui inverted toggle button">{{todo.done}}</button>
+						<button class="ui inverted toggle button" ng-click="clickDone(todo.id)">{{todo.done?"Reinstate":"Done"}}</button>
 						<button class="ui inverted button">Edit</button>
 						<button class="ui inverted button">Delete</button>
 					</div>
