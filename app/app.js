@@ -12,11 +12,13 @@ app.controller("TodoCtrl",function($scope){
 	$scope.todos = [{
 		id:0,
 		task:"Create a controller",
+		description:"Create a controller for todos.",
 		done:false
 	},
 	{
 		id:1,
 		task:"Reload set task",
+		description:"Ensure that browser-sync is working correctly",
 		done:false
 	}];
 	$scope.clickDone = function clickDone(id){

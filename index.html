@@ -27,17 +27,21 @@
 		<header class="ui large header centered">Todo App</header>
 		<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
 			<div class="column" ng-repeat="todo in todos">
-				<article class="ui horizontal inverted segment">
-					<header class="ui inverted medium header" >
-						<span class="{{todo.done?'done-todo':'normal-todo'}}">{{todo.task}}</span>
-					</header>
-					
-					<div class="ui buttons">
-						<button class="ui inverted toggle button" ng-click="clickDone(todo.id)">{{todo.done?"Reinstate":"Done"}}</button>
-						<button class="ui inverted button">Edit</button>
-						<button class="ui inverted button">Delete</button>
+				<div class="ui card">
+					<div class="content">
+						<i class="right floated blue pencil icon"></i> 
+						<header class="ui inverted medium header" >
+							<span class="{{todo.done?'done-todo':'normal-todo'}}">{{todo.task}}</span>
+						</header>
+						<div class="description">
+							<p>{{todo.description}}</p>
+						</div>
 					</div>
-				</article>
+					<div class="extra content">
+						<button class="ui small green toggle button floated left" ng-click="clickDone(todo.id)">{{todo.done?"Reinstate":"Done"}}</button>
+						<button class="ui small red button floated left">Delete</button>
+					</div>
+				</div>
 			</div>
 		</section>	
   		<script type='text/javascript' id="__bs_script__">//<![CDATA[
