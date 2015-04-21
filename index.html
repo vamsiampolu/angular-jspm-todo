@@ -31,7 +31,7 @@
 					<div class="content">
 						<i class="right floated blue pencil icon"></i> 
 						<header class="ui inverted medium header" >
-							<span class="{{todo.done?'done-todo':'normal-todo'}}">{{todo.task}}</span>
+							<span ng-class="{'done-todo':todo.done,'normal-todo':!todo.done}">{{todo.task}}</span>
 						</header>
 						<div class="description">
 							<p>{{todo.description}}</p>
