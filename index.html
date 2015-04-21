@@ -29,7 +29,7 @@
 			<div class="column" ng-repeat="todo in todos">
 				<article class="ui horizontal inverted segment">
 					<header class="ui inverted medium header" >
-						<span ng-class="{{todo.done}}?done-todo:normal-todo">{{todo.task}}</span>
+						<span class="{{todo.done?'done-todo':'normal-todo'}}">{{todo.task}}</span>
 					</header>
 					
 					<div class="ui buttons">
