@@ -86,4 +86,29 @@ app.controller("TodoCtrl",["$scope","TodoService",function($scope,TodoList){
 	};
 }]);
 
+app.controller("CreateCtrl",function($scope){
+	$scope.todo ={
+		task:'What do you want to do?',
+		description:'Lorem Ipsum Dolar...screw it',
+		btnText:'Done',
+		done:false
+	};
+	$scope.show_modal=function show_modal()
+	{
+		if(!$('.create-modal').modal('is active'))
+			$('.create-modal').modal('show');	
+	}
+	$scope.saveTodo = function saveTodo(){
+		console.log("Save Todo is currently a no-op");
+		$('.create-modal').modal('hide');
+	};
+
+	$scope.cancel = function cancel(){
+		console.log("Cancel the todo action,currently a no-op");
+		$('.create-modal').modal('hide');
+	};
+
+
+});
+
 module.exports = app;

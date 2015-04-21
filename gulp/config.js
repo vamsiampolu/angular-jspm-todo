@@ -5,10 +5,11 @@ var config = {
 		server:{
 			baseDir:src
 		},
-		files:[app+'/*.js',src+'index.html']
+		files:[app+'/*.js',src+'index.html',app+'/templates/*.html']
 	},
 	watch:{
-		js:app+'/*.js'
+		js:app+'/*.js',
+		html:app+'/templates/*.html'
 	}
 };
 
