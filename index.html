@@ -25,26 +25,12 @@
 	</head>
 	<body ng-app="app">
 		<header class="ui large header centered">Todo App</header>
-		<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
+		<!--<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
 			<div class="column" ng-repeat="todo in todos">
-				<!--<div class="ui card">
-					<div class="content">
-						<i class="right floated blue pencil icon"></i> 
-						<header class="ui inverted medium header" >
-							<span ng-class="{'done-todo':todo.done,'normal-todo':!todo.done}">{{todo.task}}</span>
-						</header>
-						<div class="description">
-							<p>{{todo.description}}</p>
-						</div>
-					</div>
-					<div class="extra content">
-						<button class="ui small green toggle button floated left" ng-click="clickDone(todo.id)">{{todo.btnText}}</button>
-						<button class="ui small red button floated left">Delete</button>
-					</div>
-				</div>-->
 				<todo-item value="todo"></todo-item>
 			</div>
-		</section>	
+		</section>-->
+		<todo-list></todo-list>	
   		<script type='text/javascript' id="__bs_script__">//<![CDATA[
     document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.2.6.4.js'><\/script>".replace("HOST", location.hostname));
 //]]></script>

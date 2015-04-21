@@ -8,7 +8,7 @@ app.controller("HelloCtrl",function($scope){
 	$scope.categories = ["Sass","Less","Stylus","CSS"];
 });
 
-app.factory("TodoList",function(){
+app.factory("TodoService",function(){
 	var instance = {};
 	instance.get = function get(){
 		var todos = [{
@@ -62,7 +62,20 @@ app.directive("todoItem",function(){
 	return dirDefObj;
 });
 
-app.controller("TodoCtrl",["$scope","TodoList",function($scope,TodoList){
+app.directive("todoList",["TodoService",function(TodoService){
+	var dirDefObj = {
+		restrict:'E',
+		templateUrl:'app/templates/todo-list.html',
+		controller:function($scope)
+		{
+			$scope.todos = TodoService.get();
+		},
+		replace:true
+	};
+	return dirDefObj;
+}]);
+
+app.controller("TodoCtrl",["$scope","TodoService",function($scope,TodoList){
 	$scope.todos = TodoList.get();
 	$scope.clickDone = function clickDone(id){
 		$scope.todos[id].done = !$scope.todos[id].done;
