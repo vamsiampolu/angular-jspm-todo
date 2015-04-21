@@ -1,0 +1,15 @@
+<div class="ui card">
+	<div class="content">
+		<i class="right floated blue pencil icon"></i> 
+		<header class="ui inverted medium header">
+			<span ng-class="{'done-todo':todo.done,'normal-todo':!todo.done}">{{todo.task}}</span>
+		</header>
+		<div class="description">
+			<p>{{todo.description}}</p>
+		</div>
+	</div>
+	<div class="extra content">
+		<button class="ui small green toggle button floated left" ng-click="clickDone(todo.id)">{{todo.btnText}}</button>
+		<button class="ui small red button floated left">Delete</button>
+	</div>
+</div>

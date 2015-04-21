@@ -27,7 +27,7 @@
 		<header class="ui large header centered">Todo App</header>
 		<section class="ui three column doubling page grid" ng-controller="TodoCtrl">
 			<div class="column" ng-repeat="todo in todos">
-				<div class="ui card">
+				<!--<div class="ui card">
 					<div class="content">
 						<i class="right floated blue pencil icon"></i> 
 						<header class="ui inverted medium header" >
@@ -41,7 +41,8 @@
 						<button class="ui small green toggle button floated left" ng-click="clickDone(todo.id)">{{todo.btnText}}</button>
 						<button class="ui small red button floated left">Delete</button>
 					</div>
-				</div>
+				</div>-->
+				<todo-item value="todo"></todo-item>
 			</div>
 		</section>	
   		<script type='text/javascript' id="__bs_script__">//<![CDATA[
