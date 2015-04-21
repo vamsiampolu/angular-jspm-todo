@@ -22,8 +22,7 @@ app.controller("TodoCtrl",function($scope){
 	$scope.clickDone = function clickDone(id){
 		console.log("Inside click done");
 		console.log($scope.todos[id]);
-		var todo = $scope.todos[id];
-		todo.done = !todo.done;
+		$scope.todos[id].done = !$scope.todos[id].done;
 	};
 });
 
