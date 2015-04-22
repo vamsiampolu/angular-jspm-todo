@@ -16,6 +16,22 @@
 		{
 			text-decoration:none;
 		}
+
+		.create-modal .preview{
+			margin-left:50px;
+		}
+
+		.create-modal .content{
+			position:relative;
+		}
+
+		.create-modal .ui.vertical.divider{
+			margin-left:23px;
+		}
+
+		.create-modal .ui.vertical.divider .label {
+			margin-top:-13px;
+		}
 		</style>
 		<script src="jspm_packages/system.js"></script>
   		<script src="config.js"></script>
@@ -43,8 +59,11 @@
 							</div>
 						</form>		
 					</div>
+					<div class="ui vertical divider">
+						<span class="ui teal circular label">Is</span>
+					</div>
 					<div class="preview">
-					<todo-item value="todo"></todo-item>
+						<todo-item value="todo"></todo-item>
 					</div>
 				</div>
 				<div class="actions">
