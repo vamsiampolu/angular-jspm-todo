@@ -10,6 +10,9 @@ var config = {
 	watch:{
 		js:app+'/*.js',
 		html:app+'/templates/*.html'
+	},
+	jshint:{
+		src:app+'/*.js'
 	}
 };
 

@@ -11,7 +11,9 @@ System.config({
 System.config({
   "map": {
     "angular": "github:angular/bower-angular@1.3.15",
+    "angular-pouchdb": "github:angular-pouchdb/angular-pouchdb@2.0.1",
     "angular-semantic-ui": "github:angularify/angular-semantic-ui@0.0.3",
+    "pouchdb": "github:pouchdb/pouchdb@3.4.0",
     "semantic-ui": "github:Semantic-Org/Semantic-UI@1.12.0",
     "github:Semantic-Org/Semantic-UI@1.12.0": {
       "css": "github:systemjs/plugin-css@0.1.9",

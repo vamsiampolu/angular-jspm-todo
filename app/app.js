@@ -1,7 +1,10 @@
 var angular = require("angular");
 var $ = require('semantic-ui');
+var ngPouchchDB = require('angular-pouchdb');
 var ngsemanticui = require('angular-semantic-ui');
-var app = angular.module("app",['angularify.semantic']);
+var pouchdb = require('pouchdb');
+var app = angular.module("app",['angularify.semantic','pouchdb']);
+
 app.controller("HelloCtrl",function($scope){
 	$scope.hello = "Hello World";
 	$scope.title="CSS Preprocessors";
@@ -86,7 +89,32 @@ app.controller("TodoCtrl",["$scope","TodoService",function($scope,TodoList){
 	};
 }]);
 
-app.controller("CreateCtrl",function($scope){
+app.factory('SaveTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
+	$window.PouchDB = pouchdb;
+	var db = pouchDB('todos');
+	var api = {
+		save: function save(todo){
+			var isOk = function isOk(response)
+			{
+				if(response.ok)
+					$log.info("The document has  been saved with id ",response._id);
+			};
+
+			var uhOh = function uhOh(err)
+			{
+				$log.error(err);
+				$log.error(err.stack);
+			};
+			
+			db.post(todo)
+			.then(isOk)
+			.catch(uhOh);	
+		}
+	};
+	return api;
+}]);
+
+app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 	$scope.todo ={
 		task:'What do you want to do?',
 		description:'Lorem Ipsum Dolar...screw it',
@@ -97,9 +125,9 @@ app.controller("CreateCtrl",function($scope){
 	{
 		if(!$('.create-modal').modal('is active'))
 			$('.create-modal').modal('show');	
-	}
+	};
 	$scope.saveTodo = function saveTodo(){
-		console.log("Save Todo is currently a no-op");
+		SaveTodo.save($scope.todo);	
 		$('.create-modal').modal('hide');
 	};
 
@@ -107,8 +135,6 @@ app.controller("CreateCtrl",function($scope){
 		console.log("Cancel the todo action,currently a no-op");
 		$('.create-modal').modal('hide');
 	};
-
-
-});
+}]);
 
 module.exports = app;
