@@ -22,6 +22,7 @@ npm install
 To start serving the files using browser-sync either of the two commands listed below can be used:
 
 gulp serve //(just starts browser-sync)
+
 gulp watch //(performs some additional stuff)
 
 The gulp watch and serve tasks are currently a bit erratic,they sometimes do not reload the page when a change is made to
