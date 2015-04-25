@@ -13,6 +13,7 @@ System.config({
     "angular": "github:angular/bower-angular@1.3.15",
     "angular-pouchdb": "github:angular-pouchdb/angular-pouchdb@2.0.1",
     "angular-semantic-ui": "github:angularify/angular-semantic-ui@0.0.3",
+    "lodash": "npm:lodash@3.7.0",
     "pouchdb": "github:pouchdb/pouchdb@3.4.0",
     "semantic-ui": "github:Semantic-Org/Semantic-UI@1.12.0",
     "github:Semantic-Org/Semantic-UI@1.12.0": {
@@ -111,6 +112,9 @@ System.config({
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
+    },
+    "npm:lodash@3.7.0": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:os-browserify@0.1.2": {
       "os": "github:jspm/nodelibs-os@0.1.0"

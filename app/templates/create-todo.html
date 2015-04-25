@@ -1,0 +1,31 @@
+<div class="ui segment">
+	<button class="ui button" ng-click="show_modal()">Create Todo</button>
+	<div class="ui modal create-modal">
+		<i class="ui icon close" ng-click="cancel()"></i>
+		<div class="header">Create Todo</div>
+		<div class="content">
+			<div class="description">
+				<form class="ui small form">
+					<div class="field">
+						<label>Task</label>
+						<input type="text" name="task" placeholder="What do you want to do?"ng-model="todo.task">
+					</div>
+					<div class="field">
+						<label>Description</label>
+						<textarea ng-model="todo.description"></textarea>
+					</div>
+				</form>		
+			</div>
+			<div class="ui vertical divider">
+				<span class="ui teal circular label">Is</span>
+			</div>
+			<div class="preview">
+				<todo-item value="todo"></todo-item>
+			</div>
+		</div>
+		<div class="actions">
+			<button type="button" class="ui button green save-button" ng-click="saveTodo()">Save</button>
+			<button type="button" class="ui button red delete-button" ng-click="cancel()">Cancel</button>
+		</div>	
+	</div>
+</div>	

@@ -1,0 +1,17 @@
+.done-todo {
+  text-decoration: line-through; }
+
+.normal-todo {
+  text-decoration: none; }
+
+.create-modal .preview {
+  margin-left: 50px; }
+.create-modal .content {
+  position: relative; }
+.create-modal .ui .vertical.divider {
+  margin-left: 23px; }
+.create-modal .ui .vertical.divider .label {
+  margin-top: -13px; }
+
+
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5zY3NzIiwiYXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFhZTtFQ1piLDhCQUE4QixFQUFFOztBQUVsQztFQUNFLHNCQUFzQixFQUFFOztBQUUxQjtFQUNFLGtCQUFrQixFQUFFO0FBQ3RCO0VBQ0UsbUJBQW1CLEVBQUU7QUFDdkI7RUFDRSxrQkFBa0IsRUFBRTtBQUN0QjtFQUNFLGtCQUFrQixFQUFFIiwiZmlsZSI6ImFwcC5jc3MifQ== */

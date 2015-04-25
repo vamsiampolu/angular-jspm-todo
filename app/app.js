@@ -3,6 +3,8 @@ var $ = require('semantic-ui');
 var ngPouchchDB = require('angular-pouchdb');
 var ngsemanticui = require('angular-semantic-ui');
 var pouchdb = require('pouchdb');
+//var lodash = require('lodash').noConflict();
+
 var app = angular.module("app",['angularify.semantic','pouchdb']);
 
 app.controller("HelloCtrl",function($scope){
@@ -11,39 +13,35 @@ app.controller("HelloCtrl",function($scope){
 	$scope.categories = ["Sass","Less","Stylus","CSS"];
 });
 
-app.factory("TodoService",function(){
+app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$window){
+	$window.PouchDB = pouchdb;
+	var db = pouchDB('todos');
 	var instance = {};
 	instance.get = function get(){
-		var todos = [{
-			id:0,
-			btnText:'Done',
-			task:"Create a controller",
-			description:"Create a controller for todos.",
-			done:false
-		},
-		{
-			id:1,
-			task:"Reload set task",
-			btnText:'Done',
-			description:"Ensure that browser-sync is working correctly",
-			done:false
-		},
-		{
-			id:2,
-			task:"Create a service",
-			btnText:'Done',
-			description:'Build a service with CouchDB as the backend and PouchDB on the frontend'
-		},{
-			id:3,
-			task:'Create a directive using an isolate scope for each todo',
-			description:'Each Todo is a unique UI component with a specialized card layout,I might as well put it in a directive',
-			btnText:'Done'
-		}];
-
-		return todos;	
+		var res = db.allDocs({include_docs: true, descending: true})
+		  .then(function(data){
+		  		var pluck = function pluck(data,prop)
+		  		{
+		  			var res = [];
+		  			for(var i=0;i<data.length;i++)
+		  			{
+		  				res.push(data[i][prop]);
+		  			}
+		  			return res;	
+		  		};
+		  		var _res = pluck(data.rows,'doc');
+		  		//return data;
+		  		//var _res = lodash.pluck(data.rows,'doc');
+		  		//$log.info("The result of using pluck operation on data.rows is ",res);
+		  		return _res;
+		  }).catch(function(err){
+		  		$log.error("The error is \n\t",err);
+		  		$log.error("The stacktrace is \n\t",err.stack);
+		  });
+		  return res;
 	};
 	return instance;
-});
+}]);
 
 app.directive("todoItem",function(){
 	var dirDefObj = {
@@ -65,13 +63,23 @@ app.directive("todoItem",function(){
 	return dirDefObj;
 });
 
-app.directive("todoList",["TodoService",function(TodoService){
+app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/todo-list.html',
 		controller:function($scope)
 		{
-			$scope.todos = TodoService.get();
+			var todosPromise = TodoService.get();
+			todosPromise
+			.then(function(data){
+				$scope.todos = data;	
+				$log.info("Todo service get data ",$scope.todos);
+			})
+			.catch(function(){
+				$log.error("The error is \n\t",err);
+		  		$log.error("The stacktrace is \n\t",err.stack);
+			});
+			
 		},
 		replace:true
 	};
@@ -97,7 +105,7 @@ app.factory('SaveTodo',['$log','pouchDB','$window',function($log,pouchDB,$window
 			var isOk = function isOk(response)
 			{
 				if(response.ok)
-					$log.info("The document has  been saved with id ",response._id);
+					$log.info("The document has  been saved with id ",response);
 			};
 
 			var uhOh = function uhOh(err)
@@ -113,6 +121,7 @@ app.factory('SaveTodo',['$log','pouchDB','$window',function($log,pouchDB,$window
 	};
 	return api;
 }]);
+
 
 app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 	$scope.todo ={
@@ -135,6 +144,42 @@ app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 		console.log("Cancel the todo action,currently a no-op");
 		$('.create-modal').modal('hide');
 	};
+}]);
+
+app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
+	var dirDefObj = {
+		restrict:'E',
+		scope:{},
+		templateUrl:'app/templates/create-todo.html',
+		controller:function($scope,SaveTodo)
+		{
+			$scope.todo ={
+				task:'What do you want to do?',
+				description:'Lorem Ipsum Dolar...screw it',
+				btnText:'Done',
+				done:false
+			};
+			
+			$scope.show_modal=function show_modal()
+			{
+				if(!$('.create-modal').modal('is active'))
+					$('.create-modal').modal('show');	
+			};
+
+			$scope.saveTodo = function saveTodo(){
+				SaveTodo.save($scope.todo);	
+				$('.create-modal').modal('hide');
+			};
+
+			$scope.cancel = function cancel(){
+				$log("Cancel the todo action,currently a no-op");
+				$('.create-modal').modal('hide');
+			};		
+		},
+		replace:true
+	};
+
+	return dirDefObj; 
 }]);
 
 module.exports = app;

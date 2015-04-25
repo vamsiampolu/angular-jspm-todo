@@ -1,0 +1,34 @@
+.done-todo {
+  text-decoration : line-through;
+}	
+
+.normal-todo {
+  text-decoration : none;
+}	
+.create-modal {
+ .preview {
+    margin-left : 50px;
+ }	
+
+ .content {
+    position : relative;
+ }	
+
+ .ui {
+   .vertical.divider {
+	 & {
+	    margin-left : 23px;
+	 }
+
+	.label
+	 {
+	    margin-top : -13px;
+	 }			
+
+	}
+  
+  }	
+  
+}	
+			
+		 
