@@ -43,7 +43,19 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 	return instance;
 }]);
 
-app.directive("todoItem",function(){
+app.factory('DeleteTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
+	$window.PouchDB = pouchdb;
+	var db = pouchDB('todos');
+	var res = {
+		delete:function(todo){
+			$log.info("Inside delete ","todo value is ",todo);
+			db.remove(todo);
+		}
+	};
+	return res;
+}]);
+
+app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/todo.html',
@@ -57,11 +69,19 @@ app.directive("todoItem",function(){
 				$scope.todo.done = !$scope.todo.done;
 				$scope.todo.btnText = $scope.todo.done?'Reinstate':'Done';
 			};
+
+			$scope.remove = function remove()
+			{
+				$log.info("Inside remove function");
+				$log.info("The todo item for removing",$scope.todo);
+				DeleteTodo.delete($scope.todo);
+				$scope.$emit('todo:deleted',$scope.todo);
+			};
 		},
 		replace:true
 	};
 	return dirDefObj;
-});
+}]);
 
 app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 	var dirDefObj = {
@@ -79,7 +99,14 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 				$log.error("The error is \n\t",err);
 		  		$log.error("The stacktrace is \n\t",err.stack);
 			});
-			
+
+			$scope.$on('todo:deleted',function(event,todo){
+				for(var i =0;i<$scope.todos.length;i++)
+				{
+					if(todo._id === $scope.todos[i]._id)
+						$scope.todos.splice(i,1);	
+				}	
+			});	
 		},
 		replace:true
 	};
