@@ -72,15 +72,50 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 
 			$scope.remove = function remove()
 			{
-				$log.info("Inside remove function");
-				$log.info("The todo item for removing",$scope.todo);
 				DeleteTodo.delete($scope.todo);
 				$scope.$emit('todo:deleted',$scope.todo);
 			};
+
+			$scope.edit = function edit()
+			{
+				$log.info("Edit has been clicked");
+				$scope.editMode = true;
+			}
 		},
 		replace:true
 	};
 	return dirDefObj;
+}]);
+
+app.factory('EditTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
+	$window.PouchDB = pouchdb;
+	var db = pouchDB('todos');
+	var res = {
+		edit:function(todo)
+		{
+			var promise = db.put(todo);
+			promise.then(function(response){
+				$log.info("Successfully updated the todo item\t",response);
+			}).catch(function(error){
+				$log.error('An error occured when updating todo');
+				$log.error(err,"\n",err.stack);
+			});
+		}
+	};
+	return res;
+}]);
+
+app.directive("editTodo",["EditTodo","$log",function(EditTodo,$log){
+	var dirDefObj = {
+		restrict:'E',
+		templateUrl:'app/templates/edit-todo.html',
+		scope:true,
+		controller:function($scope){
+			$scope.save = function save(){
+				EditTodo.edit($scope.todo);
+			};
+		}	
+	};
 }]);
 
 app.directive("todoList",["TodoService","$log",function(TodoService,$log){
