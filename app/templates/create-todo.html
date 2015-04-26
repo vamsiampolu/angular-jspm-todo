@@ -4,7 +4,7 @@
 		<i class="ui icon close" ng-click="cancel()"></i>
 		<div class="header">Create Todo</div>
 		<div class="content">
-			<div class="description">
+			<!--<div class="description">
 				<form class="ui small form">
 					<div class="field">
 						<label>Task</label>
@@ -15,12 +15,13 @@
 						<textarea ng-model="todo.description"></textarea>
 					</div>
 				</form>		
-			</div>
+			</div>-->
+			<todo-formui></todo-formui>
 			<div class="ui vertical divider">
 				<span class="ui teal circular label">Is</span>
 			</div>
 			<div class="preview">
-				<todo-item value="todo"></todo-item>
+				<todo-cardui></todo-cardui>
 			</div>
 		</div>
 		<div class="actions">

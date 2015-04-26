@@ -1,10 +1,12 @@
-<form class="ui small form">
-	<div class="field">
-		<label>Task</label>
-		<input type="text" name="task" placeholder="What do you want to do?"ng-model="todo.task">
-	</div>
-	<div class="field">
-		<label>Description</label>
-		<textarea ng-model="todo.description"></textarea>
-	</div>
-</form>
+<div ng-class="{description:show_modal,content:!show_modal}">
+	<form class="ui small form">
+		<div class="field">
+			<label>Task</label>
+			<input type="text" name="task" placeholder="What do you want to do?"ng-model="todo.task">
+		</div>
+		<div class="field">
+			<label>Description</label>
+			<textarea ng-model="todo.description"></textarea>
+		</div>
+	</form>
+</div>

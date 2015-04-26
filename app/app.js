@@ -81,13 +81,17 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 				$log.info("Edit has been clicked");
 				$scope.editMode = true;
 			}
+
+			$scope.toggleEdit = function toggleEdit(){
+				$scope.editMode = !$scope.editMode;
+			};	
 		},
 		replace:true
 	};
 	return dirDefObj;
 }]);
 
-app.factory('EditTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
+app.factory('EditService',['$log','pouchDB','$window',function($log,pouchDB,$window){
 	$window.PouchDB = pouchdb;
 	var db = pouchDB('todos');
 	var res = {
@@ -105,18 +109,25 @@ app.factory('EditTodo',['$log','pouchDB','$window',function($log,pouchDB,$window
 	return res;
 }]);
 
-app.directive("editTodo",["EditTodo","$log",function(EditTodo,$log){
+app.directive("todoFormui",function(){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/edit-todo.html',
-		scope:true,
-		controller:function($scope){
-			$scope.save = function save(){
-				EditTodo.edit($scope.todo);
-			};
-		}	
+		scope:false,
+		replace:true
 	};
-}]);
+	return dirDefObj;
+});
+
+app.directive('todoCardui',function(){
+	var dirDefObj = {
+		restrict:'E',
+		templateUrl:'app/templates/display-todo.html',
+		scope:false,
+		replace:true
+	};
+	return dirDefObj;
+});
 
 app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 	var dirDefObj = {
@@ -234,7 +245,7 @@ app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
 			};
 
 			$scope.cancel = function cancel(){
-				$log("Cancel the todo action,currently a no-op");
+				$log.info("Cancel the todo action,currently a no-op");
 				$('.create-modal').modal('hide');
 			};		
 		},
