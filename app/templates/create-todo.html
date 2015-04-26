@@ -1,21 +1,9 @@
 <div class="ui segment">
-	<button class="ui button" ng-click="show_modal()">Create Todo</button>
+	<button class="ui button">Create Todo</button>
 	<div class="ui modal create-modal">
 		<i class="ui icon close" ng-click="cancel()"></i>
 		<div class="header">Create Todo</div>
 		<div class="content">
-			<!--<div class="description">
-				<form class="ui small form">
-					<div class="field">
-						<label>Task</label>
-						<input type="text" name="task" placeholder="What do you want to do?"ng-model="todo.task">
-					</div>
-					<div class="field">
-						<label>Description</label>
-						<textarea ng-model="todo.description"></textarea>
-					</div>
-				</form>		
-			</div>-->
 			<todo-formui></todo-formui>
 			<div class="ui vertical divider">
 				<span class="ui teal circular label">Is</span>

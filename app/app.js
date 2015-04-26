@@ -76,14 +76,15 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 				$scope.$emit('todo:deleted',$scope.todo);
 			};
 
-			$scope.edit = function edit()
+			$scope.edit = function edit(value)
 			{
 				$scope.todo.editMode = true;
-			}
-
-			$scope.toggleEdit = function toggleEdit(){
-				$scope.todo.editMode = !$scope.editMode;
 			};	
+
+			$scope.display = function display(){
+				$scope.todo.editMode = false;	
+				$log.info("Display function has been clicked ",$scope.todo.editMode);		
+			};
 		},
 		replace:true
 	};
@@ -214,6 +215,10 @@ app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 
 	$scope.cancel = function cancel(){
 		$('.create-modal').modal('hide');
+	};
+
+	$scope.toggleEdit = function toggleEdit(){
+		$scope.todo.editMode = false;
 	};
 }]);
 
