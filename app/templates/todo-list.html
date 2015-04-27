@@ -1,5 +1,5 @@
 <section class="ui three column doubling page grid">
-	<div class="column" ng-repeat="todo in todos">
+	<div class="column" ng-repeat="todo in todos track by $index">
 		<todo-item value="todo"></todo-item>
 	</div>
 </section>

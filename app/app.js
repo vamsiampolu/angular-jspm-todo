@@ -75,16 +75,6 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 				DeleteTodo.delete($scope.todo);
 				$scope.$emit('todo:deleted',$scope.todo);
 			};
-
-			$scope.edit = function edit(value)
-			{
-				$scope.todo.editMode = true;
-			};	
-
-			$scope.display = function display(){
-				$scope.todo.editMode = false;	
-				$log.info("Display function has been clicked ",$scope.todo.editMode);		
-			};
 		},
 		replace:true
 	};
@@ -109,11 +99,26 @@ app.factory('EditService',['$log','pouchDB','$window',function($log,pouchDB,$win
 	return res;
 }]);
 
-app.directive("todoFormui",function(){
+app.directive("todoFormui",function(EditService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/edit-todo.html',
 		scope:false,
+		controller:function($scope){
+			$scope.display = function display(){
+				console.log("Inside the edit to preview function");
+				$scope.todo.editMode = false;
+				
+			};
+
+			$scope.save = function(){
+				EditService.edit($scope.todo);
+			};
+
+			$scope.discard = function(){
+				$scope.todo = $scopesavedState;
+			};
+		},
 		replace:true
 	};
 	return dirDefObj;
@@ -124,7 +129,27 @@ app.directive('todoCardui',function(){
 		restrict:'E',
 		templateUrl:'app/templates/display-todo.html',
 		scope:false,
-		replace:true
+		replace:true,
+		controller:function($scope)
+		{
+			$scope.clickDone = function clickDone(){
+				//two tasks (1)toggle the done value on the todo (2) toggle the btnText on the todo
+				$scope.todo.done = !$scope.todo.done;
+				$scope.todo.btnText = $scope.todo.done?'Reinstate':'Done';
+			};
+
+			$scope.remove = function remove()
+			{
+				DeleteTodo.delete($scope.todo);
+				$scope.$emit('todo:deleted',$scope.todo);
+			};
+
+			$scope.edit = function edit(value)
+			{
+				$scope.todo.editMode = true;
+				$scope.savedState = angular.extend({},$scope.todo);
+			};	
+		}
 	};
 	return dirDefObj;
 });
@@ -216,10 +241,6 @@ app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 	$scope.cancel = function cancel(){
 		$('.create-modal').modal('hide');
 	};
-
-	$scope.toggleEdit = function toggleEdit(){
-		$scope.todo.editMode = false;
-	};
 }]);
 
 app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
@@ -250,7 +271,7 @@ app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
 			$scope.cancel = function cancel(){
 				$log.info("Cancel the todo action,currently a no-op");
 				$('.create-modal').modal('hide');
-			};		
+			};
 		},
 		replace:true
 	};
