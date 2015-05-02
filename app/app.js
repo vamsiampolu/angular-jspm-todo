@@ -7,12 +7,6 @@ var pouchdb = require('pouchdb');
 
 var app = angular.module("app",['angularify.semantic','pouchdb']);
 
-app.controller("HelloCtrl",function($scope){
-	$scope.hello = "Hello World";
-	$scope.title="CSS Preprocessors";
-	$scope.categories = ["Sass","Less","Stylus","CSS"];
-});
-
 app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$window){
 	$window.PouchDB = pouchdb;
 	var db = pouchDB('todos');
@@ -30,9 +24,6 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 		  			return res;	
 		  		};
 		  		var _res = pluck(data.rows,'doc');
-		  		//return data;
-		  		//var _res = lodash.pluck(data.rows,'doc');
-		  		//$log.info("The result of using pluck operation on data.rows is ",res);
 		  		return _res;
 		  }).catch(function(err){
 		  		$log.error("The error is \n\t",err);
@@ -40,22 +31,45 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 		  });
 		  return res;
 	};
+
+	instance.edit = function edit(todo)
+		{
+			var promise = db.put(todo);
+			promise.then(function(response){
+				$log.info("Successfully updated the todo item\t",response);
+			}).catch(function(error){
+				$log.error('An error occured when updating todo');
+				$log.error(err,"\n",err.stack);
+			});
+		};
+
+	instance.save = function save(todo){
+			var isOk = function isOk(response)
+			{
+				if(response.ok)
+					$log.info("The document has  been saved with id ",response);
+			};
+
+			var uhOh = function uhOh(err)
+			{
+				$log.error(err);
+				$log.error(err.stack);
+			};
+			
+			db.post(todo)
+			.then(isOk)
+			.catch(uhOh);	
+		};
+
+	instance.delete = function(todo){
+			$log.info("Inside delete ","todo value is ",todo);
+			db.remove(todo);
+		};	
+
 	return instance;
 }]);
 
-app.factory('DeleteTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
-	$window.PouchDB = pouchdb;
-	var db = pouchDB('todos');
-	var res = {
-		delete:function(todo){
-			$log.info("Inside delete ","todo value is ",todo);
-			db.remove(todo);
-		}
-	};
-	return res;
-}]);
-
-app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
+app.directive("todoItem",["TodoService","$log",function(TodoService,$log){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/todo.html',
@@ -68,25 +82,7 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 	return dirDefObj;
 }]);
 
-app.factory('EditService',['$log','pouchDB','$window',function($log,pouchDB,$window){
-	$window.PouchDB = pouchdb;
-	var db = pouchDB('todos');
-	var res = {
-		edit:function(todo)
-		{
-			var promise = db.put(todo);
-			promise.then(function(response){
-				$log.info("Successfully updated the todo item\t",response);
-			}).catch(function(error){
-				$log.error('An error occured when updating todo');
-				$log.error(err,"\n",err.stack);
-			});
-		}
-	};
-	return res;
-}]);
-
-app.directive("todoFormui",function(EditService){
+app.directive("todoFormui",function(TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/edit-todo.html',
@@ -98,7 +94,7 @@ app.directive("todoFormui",function(EditService){
 			};
 
 			$scope.save = function(){
-				EditService.edit($scope.todo);
+				TodoService.edit($scope.todo);
 			};
 
 			$scope.discard = function(){
@@ -115,7 +111,7 @@ app.directive("todoFormui",function(EditService){
 	return dirDefObj;
 });
 
-app.directive('todoCardui',function(){
+app.directive('todoCardui',function(TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/display-todo.html',
@@ -131,7 +127,7 @@ app.directive('todoCardui',function(){
 
 			$scope.remove = function remove()
 			{
-				DeleteTodo.delete($scope.todo);
+				TodoService.delete($scope.todo);
 				$scope.$emit('todo:deleted',$scope.todo);
 			};
 
@@ -186,33 +182,7 @@ app.controller("TodoCtrl",["$scope","TodoService",function($scope,TodoList){
 	};
 }]);
 
-app.factory('SaveTodo',['$log','pouchDB','$window',function($log,pouchDB,$window){
-	$window.PouchDB = pouchdb;
-	var db = pouchDB('todos');
-	var api = {
-		save: function save(todo){
-			var isOk = function isOk(response)
-			{
-				if(response.ok)
-					$log.info("The document has  been saved with id ",response);
-			};
-
-			var uhOh = function uhOh(err)
-			{
-				$log.error(err);
-				$log.error(err.stack);
-			};
-			
-			db.post(todo)
-			.then(isOk)
-			.catch(uhOh);	
-		}
-	};
-	return api;
-}]);
-
-
-app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
+app.controller("CreateCtrl",['$scope','TodoService',function($scope,TodoService){
 	$scope.todo ={
 		task:'What do you want to do?',
 		description:'Lorem Ipsum Dolar...screw it',
@@ -225,7 +195,7 @@ app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 			$('.create-modal').modal('show');	
 	};
 	$scope.saveTodo = function saveTodo(){
-		SaveTodo.save($scope.todo);	
+		TodoService.save($scope.todo);	
 		$('.create-modal').modal('hide');
 	};
 
@@ -234,12 +204,12 @@ app.controller("CreateCtrl",['$scope','SaveTodo',function($scope,SaveTodo){
 	};
 }]);
 
-app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
+app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		scope:{},
 		templateUrl:'app/templates/create-todo.html',
-		controller:function($scope,SaveTodo)
+		controller:function($scope,TodoService)
 		{
 			$scope.todo ={
 				task:'What do you want to do?',
@@ -255,7 +225,7 @@ app.directive('modalCreate',['$log','SaveTodo',function($log,SaveTodo){
 			};
 
 			$scope.saveTodo = function saveTodo(){
-				SaveTodo.save($scope.todo);	
+				TodoService.save($scope.todo);	
 				$('.create-modal').modal('hide');
 			};
 
