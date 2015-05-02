@@ -62,20 +62,7 @@ app.directive("todoItem",["DeleteTodo","$log",function(DeleteTodo,$log){
 		scope:{
 			todo:'=value'
 		},
-		controller:function($scope)
-		{
-			$scope.clickDone = function clickDone(){
-				//two tasks (1)toggle the done value on the todo (2) toggle the btnText on the todo
-				$scope.todo.done = !$scope.todo.done;
-				$scope.todo.btnText = $scope.todo.done?'Reinstate':'Done';
-			};
-
-			$scope.remove = function remove()
-			{
-				DeleteTodo.delete($scope.todo);
-				$scope.$emit('todo:deleted',$scope.todo);
-			};
-		},
+		controller:function($scope){},
 		replace:true
 	};
 	return dirDefObj;
@@ -105,10 +92,9 @@ app.directive("todoFormui",function(EditService){
 		templateUrl:'app/templates/edit-todo.html',
 		scope:false,
 		controller:function($scope){
-			$scope.display = function display(){
+			$scope.preview = function(){
 				console.log("Inside the edit to preview function");
 				$scope.todo.editMode = false;
-				
 			};
 
 			$scope.save = function(){
@@ -116,7 +102,12 @@ app.directive("todoFormui",function(EditService){
 			};
 
 			$scope.discard = function(){
-				$scope.todo = $scopesavedState;
+				$scope.todo={
+					task:'',
+					dscription:'',
+					btnText:''
+				};
+				$scope.todo = $scope.savedState;
 			};
 		},
 		replace:true

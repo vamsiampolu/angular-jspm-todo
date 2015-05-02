@@ -1,6 +1,13 @@
 .done-todo {
   text-decoration: line-through; }
 
+.card .content {
+  position: relative;
+  z-index: 1; }
+.card .unhide {
+  position: relative;
+  z-index: 10000; }
+
 .normal-todo {
   text-decoration: none; }
 
@@ -14,4 +21,4 @@
   margin-top: -13px; }
 
 
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5zY3NzIiwiYXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFhZTtFQ1piLDhCQUE4QixFQUFFOztBQUVsQztFQUNFLHNCQUFzQixFQUFFOztBQUUxQjtFQUNFLGtCQUFrQixFQUFFO0FBQ3RCO0VBQ0UsbUJBQW1CLEVBQUU7QUFDdkI7RUFDRSxrQkFBa0IsRUFBRTtBQUN0QjtFQUNFLGtCQUFrQixFQUFFIiwiZmlsZSI6ImFwcC5jc3MifQ== */
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFwcC5zY3NzIiwiYXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFtQmM7RUNsQlosOEJBQThCLEVBQUU7O0FBRWxDO0VBQ0UsbUJBQW1CO0VBQ25CLFdBQVcsRUFBRTtBQUNmO0VBQ0UsbUJBQW1CO0VBQ25CLGVBQWUsRUFBRTs7QUFFbkI7RUFDRSxzQkFBc0IsRUFBRTs7QUFFMUI7RUFDRSxrQkFBa0IsRUFBRTtBQUN0QjtFQUNFLG1CQUFtQixFQUFFO0FBQ3ZCO0VBQ0Usa0JBQWtCLEVBQUU7QUFDdEI7RUFDRSxrQkFBa0IsRUFBRSIsImZpbGUiOiJhcHAuY3NzIn0= */
