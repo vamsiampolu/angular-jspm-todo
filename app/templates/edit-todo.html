@@ -1,5 +1,5 @@
 <div ng-class="{description:show_modal,content:!show_modal}">
-	<i class="right floated blue unhide icon" ng-click="preview()"></i>
+	<i class="right floated blue unhide icon" ng-click="actions.preview()"></i>
 	<form class="ui small form">
 		<div class="field">
 			<label>Task</label>
@@ -11,7 +11,7 @@
 		</div>
 		<div class="two fields">
 			<button class="ui red button floated right">Discard</button>
-			<button class="ui submit green button floated right" ng-click="save()">Save</button>
+			<button class="ui submit green button floated right" ng-click="actions.save()">Save</button>
 		</div>	
 	</form>
 </div>

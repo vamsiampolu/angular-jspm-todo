@@ -1,6 +1,6 @@
 <div>
 <div class="content">
-	<i class="right floated blue pencil icon" ng-click="edit()"></i> 
+	<i class="right floated blue pencil icon" ng-click="actions.edit()"></i> 
 	<header class="ui medium header">
 		<span ng-class="{'done-todo':todo.done,'normal-todo':!todo.done}">{{todo.task}}</span>
 	</header>
@@ -9,7 +9,7 @@
 	</div>
 </div>
 <div class="extra content">
-	<button class="ui small green toggle button floated left" ng-click="clickDone()">{{todo.btnText}}</button>
-	<button class="ui small red button floated left" ng-click="remove()">Delete</button>
+	<button class="ui small green toggle button floated left" ng-click="actions.clickDone()">{{uiState.btnText}}</button>
+	<button class="ui small red button floated left" ng-click="actions.remove()">Delete</button>
 </div>
 </div>

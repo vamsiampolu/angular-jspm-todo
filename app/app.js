@@ -69,18 +69,24 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 	return instance;
 }]);
 
-app.directive("todoItem",["TodoService","$log",function(TodoService,$log){
+app.directive("todoItem",function($log){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/todo.html',
 		scope:{
 			todo:'=value'
 		},
-		controller:function($scope){},
+		controller:function($scope){
+			$scope.actions = {};
+			$scope.uiState = {
+				editMode:false,
+				btnText:'Done'
+			};
+		},
 		replace:true
 	};
 	return dirDefObj;
-}]);
+});
 
 app.directive("todoFormui",function(TodoService){
 	var dirDefObj = {
@@ -88,20 +94,23 @@ app.directive("todoFormui",function(TodoService){
 		templateUrl:'app/templates/edit-todo.html',
 		scope:false,
 		controller:function($scope){
-			$scope.preview = function(){
+			console.log($scope.uiState.editMode);
+						
+			//add a seperate model for editor and actions
+			$scope.actions.preview = function(){
 				console.log("Inside the edit to preview function");
-				$scope.todo.editMode = false;
+				$scope.uiState.editMode = false;
 			};
 
-			$scope.save = function(){
+			$scope.actions.save = function(){
 				TodoService.edit($scope.todo);
 			};
 
-			$scope.discard = function(){
+			$scope.actions.discard = function(){
 				$scope.todo={
 					task:'',
 					dscription:'',
-					btnText:''
+					done:''
 				};
 				$scope.todo = $scope.savedState;
 			};
@@ -118,23 +127,24 @@ app.directive('todoCardui',function(TodoService){
 		scope:false,
 		replace:true,
 		controller:function($scope)
-		{
-			$scope.clickDone = function clickDone(){
+		{			
+			$scope.actions.clickDone = function clickDone(){
 				//two tasks (1)toggle the done value on the todo (2) toggle the btnText on the todo
 				$scope.todo.done = !$scope.todo.done;
-				$scope.todo.btnText = $scope.todo.done?'Reinstate':'Done';
+				$scope.uiState.btnText = $scope.todo.done?'Reinstate':'Done';
 			};
 
-			$scope.remove = function remove()
+			$scope.actions.remove = function remove()
 			{
 				TodoService.delete($scope.todo);
 				$scope.$emit('todo:deleted',$scope.todo);
 			};
 
-			$scope.edit = function edit(value)
+			$scope.actions.edit = function edit(value)
 			{
-				$scope.todo.editMode = true;
-				$scope.savedState = angular.extend({},$scope.todo);
+				$scope.uiState.editMode = true;
+				console.log($scope.uiState.editMode);
+				//$scope.savedState = angular.extend({},$scope.todo);
 			};	
 		}
 	};
