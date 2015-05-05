@@ -94,7 +94,6 @@ app.directive("todoFormui",function(TodoService){
 		templateUrl:'app/templates/edit-todo.html',
 		scope:false,
 		controller:function($scope){
-			console.log($scope.uiState.editMode);
 						
 			//add a seperate model for editor and actions
 			$scope.actions.preview = function(){
@@ -181,17 +180,6 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 	return dirDefObj;
 }]);
 
-app.controller("TodoCtrl",["$scope","TodoService",function($scope,TodoList){
-	$scope.todos = TodoList.get();
-	$scope.clickDone = function clickDone(id){
-		$scope.todos[id].done = !$scope.todos[id].done;
-		if($scope.todos[id].done)
-			$scope.todos[id].btnText = 'Reinstate';
-		else
-			$scope.todos[id].btnText = 'Done';
-	};
-}]);
-
 app.controller("CreateCtrl",['$scope','TodoService',function($scope,TodoService){
 	$scope.todo ={
 		task:'What do you want to do?',
@@ -221,6 +209,11 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 		templateUrl:'app/templates/create-todo.html',
 		controller:function($scope,TodoService)
 		{
+			$scope.uiState = {
+				btnText:'Done',
+				editMode:false
+			};
+			$scope.actions = {};
 			$scope.todo ={
 				task:'What do you want to do?',
 				description:'Lorem Ipsum Dolar...screw it',
@@ -228,18 +221,18 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 				done:false
 			};
 			
-			$scope.show_modal=function show_modal()
+			$scope.actions.show_modal=function show_modal()
 			{
 				if(!$('.create-modal').modal('is active'))
 					$('.create-modal').modal('show');	
 			};
 
-			$scope.saveTodo = function saveTodo(){
+			$scope.actions.saveTodo = function saveTodo(){
 				TodoService.save($scope.todo);	
 				$('.create-modal').modal('hide');
 			};
 
-			$scope.cancel = function cancel(){
+			$scope.actions.cancel = function cancel(){
 				$log.info("Cancel the todo action,currently a no-op");
 				$('.create-modal').modal('hide');
 			};
