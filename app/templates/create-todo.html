@@ -1,20 +1,20 @@
 <div class="ui segment">
-	<button class="ui button">Create Todo</button>
+	<button class="ui button" ng-click="actions.show_modal()">Create Todo</button>
 	<div class="ui modal create-modal">
 		<i class="ui icon close" ng-click="cancel()"></i>
 		<div class="header">Create Todo</div>
 		<div class="content">
-			<todo-formui></todo-formui>
+			<todo-formui hide-buttons="uiState.hideButtons" todo="model.todo"></todo-formui>
 			<div class="ui vertical divider">
 				<span class="ui teal circular label">Is</span>
 			</div>
 			<div class="preview">
-				<todo-cardui></todo-cardui>
+				<todo-cardui hide-buttons="uiState.hideButtons" todo="model.todo"></todo-cardui>
 			</div>
 		</div>
 		<div class="actions">
-			<button type="button" class="ui button green save-button" ng-click="saveTodo()">Save</button>
-			<button type="button" class="ui button red delete-button" ng-click="cancel()">Cancel</button>
-		</div>	
+			<button type="button" class="ui button green save-button" ng-click="actions.saveTodo()">Save</button>
+			<button type="button" class="ui button red delete-button" ng-click="actions.cancel()">Cancel</button>
+		</div>
 	</div>
-</div>	
+</div>

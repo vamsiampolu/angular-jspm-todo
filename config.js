@@ -11,14 +11,20 @@ System.config({
 System.config({
   "map": {
     "angular": "github:angular/bower-angular@1.3.15",
+    "angular-animate": "github:angular/bower-angular-animate@1.3.15",
     "angular-pouchdb": "github:angular-pouchdb/angular-pouchdb@2.0.1",
     "angular-semantic-ui": "github:angularify/angular-semantic-ui@0.0.3",
     "lodash": "npm:lodash@3.7.0",
+    "ngFx": "github:Hendrixer/ngFx@1.1.0",
     "pouchdb": "github:pouchdb/pouchdb@3.4.0",
     "semantic-ui": "github:Semantic-Org/Semantic-UI@1.12.0",
+    "tweenMax": "npm:gsap@1.16.1",
     "github:Semantic-Org/Semantic-UI@1.12.0": {
       "css": "github:systemjs/plugin-css@0.1.9",
       "jquery": "github:components/jquery@2.1.3"
+    },
+    "github:angular/bower-angular-animate@1.3.15": {
+      "angular": "github:angular/bower-angular@1.3.15"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
       "assert": "npm:assert@1.3.0"
@@ -106,6 +112,9 @@ System.config({
     },
     "npm:graceful-readlink@1.0.1": {
       "fs": "github:jspm/nodelibs-fs@0.1.2"
+    },
+    "npm:gsap@1.16.1": {
+      "process": "github:jspm/nodelibs-process@0.1.1"
     },
     "npm:https-browserify@0.0.0": {
       "http": "github:jspm/nodelibs-http@1.7.1"

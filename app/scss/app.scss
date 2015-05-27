@@ -1,6 +1,16 @@
 .done-todo {
   text-decoration : line-through;
-}	
+}
+
+.animation-flip-out {
+    animation: flipOutY 2s,
+                      fadeOut 1s
+}
+
+.animation-flip-in {
+    animation:fadeIn 1s,
+                    flipInY 2s
+}
 
 .card {
 	.content{
@@ -15,15 +25,15 @@
 
 .normal-todo {
   text-decoration : none;
-}	
+}
 .create-modal {
  .preview {
     margin-left : 50px;
- }	
+ }
 
  .content {
     position : relative;
- }	
+ }
 
  .ui {
    .vertical.divider {
@@ -34,12 +44,11 @@
 	.label
 	 {
 	    margin-top : -13px;
-	 }			
+	 }
 
 	}
-  
-  }	
-  
-}	
-			
-		 
+
+  }
+
+}
+

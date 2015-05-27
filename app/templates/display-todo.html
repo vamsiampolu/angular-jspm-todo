@@ -1,14 +1,14 @@
 <div>
 <div class="content">
-	<i class="right floated blue pencil icon" ng-click="actions.edit()"></i> 
+	<i class="right floated blue pencil icon" ng-click="actions.edit()" ng-hide="hideButtons"></i>
 	<header class="ui medium header">
-		<span ng-class="{'done-todo':todo.done,'normal-todo':!todo.done}">{{todo.task}}</span>
+		<span ng-class="{'done-todo':model.todo.done,'normal-todo':!model.todo.done}">{{model.todo.task}}</span>
 	</header>
 	<div class="description">
-		<p>{{todo.description}}</p>
+		<p>{{model.todo.description}}</p>
 	</div>
 </div>
-<div class="extra content">
+<div class="extra content" ng-hide="hideButtons">
 	<button class="ui small green toggle button floated left" ng-click="actions.clickDone()">{{uiState.btnText}}</button>
 	<button class="ui small red button floated left" ng-click="actions.remove()">Delete</button>
 </div>

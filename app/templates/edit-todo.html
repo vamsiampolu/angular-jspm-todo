@@ -1,17 +1,18 @@
-<div ng-class="{description:show_modal,content:!show_modal}">
-	<i class="right floated blue unhide icon" ng-click="actions.preview()"></i>
+<div ng-class="{description:hideButtons,content:!hideButtons}">
+	<i class="right floated blue unhide icon" ng-click="actions.preview()" ng-hide="hideButtons"></i>
 	<form class="ui small form">
 		<div class="field">
 			<label>Task</label>
-			<input type="text" name="task" placeholder="What do you want to do?"ng-model="todo.task">
+			<input type="text" name="task" placeholder="What do you want to do?"
+			ng-model="model.todo.task">
 		</div>
 		<div class="field">
 			<label>Description</label>
-			<textarea ng-model="todo.description"></textarea>
+			<textarea ng-model="model.todo.description"></textarea>
 		</div>
-		<div class="two fields">
+		<div class="two fields" ng-hide="hideButtons">
 			<button class="ui red button floated right">Discard</button>
 			<button class="ui submit green button floated right" ng-click="actions.save()">Save</button>
-		</div>	
+		</div>
 	</form>
 </div>

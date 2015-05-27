@@ -1,4 +1,4 @@
 <div class="ui card">
-	<todo-formui ng-show="uiState.editMode"></todo-formui>
-	<todo-cardui ng-show="!uiState.editMode"></todo-cardui>
+	<todo-formui class="edit-mode"  ng-show="uiState.editMode" hide-buttons="false" todo = "todo"></todo-formui>
+	<todo-cardui class="display-mode"  ng-show="!uiState.editMode" hide-buttons="false" todo="todo"></todo-cardui>
 </div>

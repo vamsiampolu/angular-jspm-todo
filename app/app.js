@@ -1,11 +1,9 @@
 var angular = require("angular");
 var $ = require('semantic-ui');
 var ngPouchchDB = require('angular-pouchdb');
-var ngsemanticui = require('angular-semantic-ui');
 var pouchdb = require('pouchdb');
-//var lodash = require('lodash').noConflict();
-
-var app = angular.module("app",['angularify.semantic','pouchdb']);
+var ngAnimate = require('angular-animate');
+var app = angular.module("app",['pouchdb','ngAnimate']);
 
 app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$window){
 	$window.PouchDB = pouchdb;
@@ -21,7 +19,7 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 		  			{
 		  				res.push(data[i][prop]);
 		  			}
-		  			return res;	
+		  			return res;
 		  		};
 		  		var _res = pluck(data.rows,'doc');
 		  		return _res;
@@ -37,7 +35,7 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 			var promise = db.put(todo);
 			promise.then(function(response){
 				$log.info("Successfully updated the todo item\t",response);
-			}).catch(function(error){
+			}).catch(function(err){
 				$log.error('An error occured when updating todo');
 				$log.error(err,"\n",err.stack);
 			});
@@ -55,16 +53,16 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 				$log.error(err);
 				$log.error(err.stack);
 			};
-			
+
 			db.post(todo)
 			.then(isOk)
-			.catch(uhOh);	
+			.catch(uhOh);
 		};
 
 	instance.delete = function(todo){
 			$log.info("Inside delete ","todo value is ",todo);
 			db.remove(todo);
-		};	
+		};
 
 	return instance;
 }]);
@@ -92,21 +90,32 @@ app.directive("todoFormui",function(TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/edit-todo.html',
-		scope:false,
+		scope:{
+			hideButtons:"=hideButtons",
+			todo:"=todo"
+		},
 		controller:function($scope){
-						
 			//add a seperate model for editor and actions
+			console.log($scope.hideButtons);
+			$scope.model = {
+				todo:$scope.todo
+			};
+			$scope.uiState = {
+				editMode:true,
+				btnText:'Done'
+			};
+			$scope.actions = {};
 			$scope.actions.preview = function(){
 				console.log("Inside the edit to preview function");
 				$scope.uiState.editMode = false;
 			};
 
 			$scope.actions.save = function(){
-				TodoService.edit($scope.todo);
+				TodoService.edit($scope.model.todo);
 			};
 
 			$scope.actions.discard = function(){
-				$scope.todo={
+				$scope.model.todo={
 					task:'',
 					dscription:'',
 					done:''
@@ -123,28 +132,38 @@ app.directive('todoCardui',function(TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/display-todo.html',
-		scope:false,
+		scope:{
+			"hideButtons":"=hideButtons",
+			todo:"=todo"
+		},
 		replace:true,
 		controller:function($scope)
-		{			
+		{	console.log($scope);
+			$scope.model = {
+				todo:$scope.todo
+			};
+			$scope.uiState = {
+				editMode:false,
+				btnText:'Done'
+			};
+			$scope.actions = {};
 			$scope.actions.clickDone = function clickDone(){
 				//two tasks (1)toggle the done value on the todo (2) toggle the btnText on the todo
-				$scope.todo.done = !$scope.todo.done;
+				$scope.model.todo.done = !$scope.model.todo.done;
 				$scope.uiState.btnText = $scope.todo.done?'Reinstate':'Done';
 			};
 
 			$scope.actions.remove = function remove()
 			{
-				TodoService.delete($scope.todo);
-				$scope.$emit('todo:deleted',$scope.todo);
+				TodoService.delete($scope.model.todo);
+				$scope.$emit('todo:deleted',$scope.model.todo);
 			};
 
 			$scope.actions.edit = function edit(value)
 			{
 				$scope.uiState.editMode = true;
 				console.log($scope.uiState.editMode);
-				//$scope.savedState = angular.extend({},$scope.todo);
-			};	
+			};
 		}
 	};
 	return dirDefObj;
@@ -156,10 +175,11 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 		templateUrl:'app/templates/todo-list.html',
 		controller:function($scope)
 		{
+			$scope.model = {};
 			var todosPromise = TodoService.get();
 			todosPromise
 			.then(function(data){
-				$scope.todos = data;	
+				$scope.model.todos = data;
 				$log.info("Todo service get data ",$scope.todos);
 			})
 			.catch(function(){
@@ -171,35 +191,13 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 				for(var i =0;i<$scope.todos.length;i++)
 				{
 					if(todo._id === $scope.todos[i]._id)
-						$scope.todos.splice(i,1);	
-				}	
-			});	
+						$scope.todos.splice(i,1);
+				}
+			});
 		},
 		replace:true
 	};
 	return dirDefObj;
-}]);
-
-app.controller("CreateCtrl",['$scope','TodoService',function($scope,TodoService){
-	$scope.todo ={
-		task:'What do you want to do?',
-		description:'Lorem Ipsum Dolar...screw it',
-		btnText:'Done',
-		done:false
-	};
-	$scope.show_modal=function show_modal()
-	{
-		if(!$('.create-modal').modal('is active'))
-			$('.create-modal').modal('show');	
-	};
-	$scope.saveTodo = function saveTodo(){
-		TodoService.save($scope.todo);	
-		$('.create-modal').modal('hide');
-	};
-
-	$scope.cancel = function cancel(){
-		$('.create-modal').modal('hide');
-	};
 }]);
 
 app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
@@ -209,26 +207,22 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 		templateUrl:'app/templates/create-todo.html',
 		controller:function($scope,TodoService)
 		{
-			$scope.uiState = {
-				btnText:'Done',
-				editMode:false
-			};
+			$scope.model = {};
 			$scope.actions = {};
-			$scope.todo ={
+			$scope.uiState = {};
+			$scope.model.todo ={
 				task:'What do you want to do?',
-				description:'Lorem Ipsum Dolar...screw it',
-				btnText:'Done',
-				done:false
+				description:'Lorem Ipsum Dolar...screw it'
 			};
-			
+			$scope.uiState.hideButtons = true;
 			$scope.actions.show_modal=function show_modal()
 			{
 				if(!$('.create-modal').modal('is active'))
-					$('.create-modal').modal('show');	
+					$('.create-modal').modal('show');
 			};
 
 			$scope.actions.saveTodo = function saveTodo(){
-				TodoService.save($scope.todo);	
+				TodoService.save($scope.todo);
 				$('.create-modal').modal('hide');
 			};
 
@@ -240,7 +234,7 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 		replace:true
 	};
 
-	return dirDefObj; 
+	return dirDefObj;
 }]);
 
 module.exports = app;
