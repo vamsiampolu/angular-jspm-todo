@@ -30,6 +30,17 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 		  return res;
 	};
 
+	instance.getOne = function getOne(id){
+		var res = db.get(id)
+		.then(function(data){
+			return data;
+		})
+		.catch(function(err){
+			console.log(err,err.stack);
+		});
+		return res;
+	};
+
 	instance.edit = function edit(todo)
 		{
 			var promise = db.put(todo);
@@ -46,6 +57,8 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 			{
 				if(response.ok)
 					$log.info("The document has  been saved with id ",response);
+
+				return response;
 			};
 
 			var uhOh = function uhOh(err)
@@ -54,12 +67,13 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 				$log.error(err.stack);
 			};
 
-			db.post(todo)
+			var promise = db.post(todo)
 			.then(isOk)
 			.catch(uhOh);
+			return promise;
 		};
 
-	instance.delete = function(todo){
+	instance.deleteItem = function(todo){
 			$log.info("Inside delete ","todo value is ",todo);
 			db.remove(todo);
 		};
@@ -96,7 +110,6 @@ app.directive("todoFormui",function(TodoService){
 		},
 		controller:function($scope){
 			//add a seperate model for editor and actions
-			console.log($scope.hideButtons);
 			$scope.model = {
 				todo:$scope.todo
 			};
@@ -138,8 +151,7 @@ app.directive('todoCardui',function(TodoService){
 		},
 		replace:true,
 		controller:function($scope)
-		{	console.log($scope);
-			$scope.model = {
+		{	$scope.model = {
 				todo:$scope.todo
 			};
 			$scope.uiState = {
@@ -155,7 +167,7 @@ app.directive('todoCardui',function(TodoService){
 
 			$scope.actions.remove = function remove()
 			{
-				TodoService.delete($scope.model.todo);
+				TodoService.deleteItem($scope.model.todo);
 				$scope.$emit('todo:deleted',$scope.model.todo);
 			};
 
@@ -188,11 +200,18 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 			});
 
 			$scope.$on('todo:deleted',function(event,todo){
-				for(var i =0;i<$scope.todos.length;i++)
-				{
-					if(todo._id === $scope.todos[i]._id)
-						$scope.todos.splice(i,1);
-				}
+				 $scope.model.todos = $.grep($scope.model.todos, function (todoItem, i) {
+				      if (todoItem._id === todo._id) {
+				        console.log(i);
+				        return false;
+				      } else {
+				        return true;
+				      }
+				    });
+			});
+
+			$scope.$on('todo:created',function(event,todo){
+				$scope.model.todos.push(todo);
 			});
 		},
 		replace:true
@@ -207,12 +226,15 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 		templateUrl:'app/templates/create-todo.html',
 		controller:function($scope,TodoService)
 		{
+			console.log($scope);
 			$scope.model = {};
 			$scope.actions = {};
 			$scope.uiState = {};
 			$scope.model.todo ={
 				task:'What do you want to do?',
-				description:'Lorem Ipsum Dolar...screw it'
+				description:'Lorem Ipsum Dolar...screw it',
+				done:false
+
 			};
 			$scope.uiState.hideButtons = true;
 			$scope.actions.show_modal=function show_modal()
@@ -222,7 +244,16 @@ app.directive('modalCreate',['$log','TodoService',function($log,TodoService){
 			};
 
 			$scope.actions.saveTodo = function saveTodo(){
-				TodoService.save($scope.todo);
+				var promise = TodoService.save($scope.model.todo);
+				promise
+					.then(function(data){ return data.id; })
+					.then(TodoService.getOne)
+					.then(function(data){
+						$scope.$emit('todo:created',data);
+					})
+					.catch(function(err){
+						console.log(err,err.stack);
+					});
 				$('.create-modal').modal('hide');
 			};
 
