@@ -10,6 +10,6 @@
 </div>
 <div class="extra content" ng-hide="hideButtons">
 	<button class="ui small green toggle button floated left" ng-click="actions.clickDone()">{{uiState.btnText}}</button>
-	<button class="ui small red button floated left" ng-click="actions.remove()">Delete</button>
+	<button class="ui small red button floated left" ng-click="actions.remove(model.todo._id)">Delete</button>
 </div>
 </div>

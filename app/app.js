@@ -75,7 +75,7 @@ app.factory("TodoService",['$log','pouchDB','$window',function($log,pouchDB,$win
 
 	instance.deleteItem = function(todo){
 			$log.info("Inside delete ","todo value is ",todo);
-			db.remove(todo);
+			return db.remove(todo);
 		};
 
 	return instance;
@@ -145,6 +145,7 @@ app.directive('todoCardui',function(TodoService){
 	var dirDefObj = {
 		restrict:'E',
 		templateUrl:'app/templates/display-todo.html',
+		require:'^todoList',
 		scope:{
 			"hideButtons":"=hideButtons",
 			todo:"=todo"
@@ -165,10 +166,16 @@ app.directive('todoCardui',function(TodoService){
 				$scope.uiState.btnText = $scope.todo.done?'Reinstate':'Done';
 			};
 
-			$scope.actions.remove = function remove()
+			$scope.actions.remove = function remove(id)
 			{
-				TodoService.deleteItem($scope.model.todo);
-				$scope.$emit('todo:deleted',$scope.model.todo);
+				TodoService.deleteItem($scope.model.todo)
+				.then(function(){
+					$scope.$emit('todo:deleted',$scope.model.todo);
+				})
+				.catch(function(err){
+					console.log(err,err.stack);
+				});
+
 			};
 
 			$scope.actions.edit = function edit(value)
@@ -176,7 +183,10 @@ app.directive('todoCardui',function(TodoService){
 				$scope.uiState.editMode = true;
 				console.log($scope.uiState.editMode);
 			};
-		}
+		},
+		 link: function(scope, element, attrs, listCtrl) {
+
+    		}
 	};
 	return dirDefObj;
 });
@@ -192,6 +202,21 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 			todosPromise
 			.then(function(data){
 				$scope.model.todos = data;
+				var onItemDeleted = function onItemDeleted(event,todo){
+			                var todos = $scope.model.todos;
+			                var checkIndex = function checkIndex(t){
+			                    return t._id !== todo._id;
+			                };
+			                todos = todos.filter(checkIndex);
+			                $scope.model.todos = todos;
+			            };
+
+				$scope.$on('todo:deleted',onItemDeleted);
+
+				$scope.$on('todo:created',function(event,todo){
+
+					$scope.model.todos.push(todo);
+				});
 				$log.info("Todo service get data ",$scope.todos);
 			})
 			.catch(function(){
@@ -199,20 +224,7 @@ app.directive("todoList",["TodoService","$log",function(TodoService,$log){
 		  		$log.error("The stacktrace is \n\t",err.stack);
 			});
 
-			$scope.$on('todo:deleted',function(event,todo){
-				 $scope.model.todos = $.grep($scope.model.todos, function (todoItem, i) {
-				      if (todoItem._id === todo._id) {
-				        console.log(i);
-				        return false;
-				      } else {
-				        return true;
-				      }
-				    });
-			});
 
-			$scope.$on('todo:created',function(event,todo){
-				$scope.model.todos.push(todo);
-			});
 		},
 		replace:true
 	};
